@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BioCrypto</string>
+    <string name="prompt_info_title">Sign in</string>
+    <string name="prompt_info_subtitle">Biometric</string>
+    <string name="prompt_info_description">Fingerprint to continue</string>
+    <string name="prompt_info_cancel">cancel</string>
+</resources>
