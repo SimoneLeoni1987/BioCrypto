@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.biocrypto.biometrics.Biometrics
 import com.example.biocrypto.crypto.CryptographyManager
@@ -40,9 +39,10 @@ class MainActivity : AppCompatActivity() {
             // try to extract the observer
             liveData.observe(this, Observer {
                 Log.d(TAG, "From authentication")
+                var crypto = it.getOrNull()
 
-                if (it != null) {
-                    processData(it, Operation.Encrypt)
+                crypto?.let {
+                    processData(crypto, Operation.Encrypt)
                 }
 
             })
@@ -58,8 +58,9 @@ class MainActivity : AppCompatActivity() {
             liveData.observe(this, Observer {
                 Log.d(TAG, "From authentication")
 
-                if (it != null) {
-                    processData(it, Operation.Decrypt)
+                var crypto = it.getOrNull()
+                crypto?.let {
+                    processData(crypto, Operation.Decrypt)
                 }
 
             })
@@ -70,7 +71,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
     }
-
 
 
     private fun processData(cryptoObject: BiometricPrompt.CryptoObject?, operation: Operation) {
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
                 String(encrypted.ciphertext, Charset.forName("UTF-8"))
             }
-            Operation.Decrypt ->  cryptographyManager.decryptData(cipherText, cryptoObject?.cipher!!)
+            Operation.Decrypt -> cryptographyManager.decryptData(cipherText, cryptoObject?.cipher!!)
         }
 
 
