@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
-import androidx.lifecycle.Observer
 import com.example.biocrypto.biometrics.Biometrics
 import com.example.biocrypto.crypto.CryptographyManager
 import com.example.biocrypto.databinding.ActivityMainBinding
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     private val secretKeyName = "my_key"
     private lateinit var cipherText: ByteArray
     private var cryptographyManager = CryptographyManager()
-    private var readyToEncrypt: Boolean = false
 
     private lateinit var etText: EditText
 
@@ -37,9 +35,8 @@ class MainActivity : AppCompatActivity() {
             val liveData = Biometrics.authenticateToEncrypt(cipher, this)
 
             // try to extract the observer
-            liveData.observe(this, Observer {
-                Log.d(TAG, "From authentication")
-                var crypto = it.getOrNull()
+            liveData.observe(this, {
+                val crypto = it.getOrNull()
 
                 crypto?.let {
                     processData(crypto, Operation.Encrypt)
@@ -55,10 +52,9 @@ class MainActivity : AppCompatActivity() {
             val liveData = Biometrics.authenticateToDecrypt(cipher, this)
 
             // try to extract the observer
-            liveData.observe(this, Observer {
-                Log.d(TAG, "From authentication")
+            liveData.observe(this, {
 
-                var crypto = it.getOrNull()
+                val crypto = it.getOrNull()
                 crypto?.let {
                     processData(crypto, Operation.Decrypt)
                 }
